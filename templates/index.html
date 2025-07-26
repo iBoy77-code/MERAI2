@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merai - Forging the Future</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0a0a0a;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/static/images/MERAI.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      color: #fff;
+    }
+
+    .neon-text {
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #ff6f00;
+    }
+
+    .glow-button {
+      background-color: transparent;
+      border: 2px solid #00ffff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      color: #00ffff;
+      transition: all 0.3s ease-in-out;
+      animation: pulse 2s infinite;
+    }
+
+    .glow-button:hover {
+      background-color: #00ffff;
+      color: #000;
+      box-shadow: 0 0 15px #00ffff;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 5px #00ffff; }
+      50% { box-shadow: 0 0 15px #00ffff; }
+      100% { box-shadow: 0 0 5px #00ffff; }
+    }
+  </style>
+</head>
+
+<body class="text-white">
+
+  <!-- NAVIGATION -->
+  <nav class="fixed top-0 w-full z-50 bg-black bg-opacity-70 backdrop-blur-sm shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <h1 class="text-2xl neon-text">MERAI</h1>
+      <ul class="flex gap-6 text-sm sm:text-base">
+        <li><a href="#about" class="hover:text-cyan-400">About</a></li>
+        <li><a href="#gallery" class="hover:text-cyan-400">Showcase</a></li>
+        <li><a href="#software" class="hover:text-cyan-400">Software</a></li>
+        <li><a href="#contact" class="hover:text-cyan-400">Contact</a></li>
+        <li><a href="#donate" class="hover:text-cyan-400">Donate</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="h-screen flex items-center justify-center flex-col text-center pt-20">
+    <h1 class="text-6xl sm:text-7xl neon-text mb-4">MERAI</h1>
+    <p class="text-xl mb-6">Forging the Future of Intelligence. One Code at a Time.</p>
+    <a href="#software" class="glow-button">Explore Software</a>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="px-6 py-16 bg-black" id="about">
+    <h2 class="text-3xl neon-text mb-4">About Merai</h2>
+    <p class="text-lg leading-relaxed max-w-4xl mx-auto">
+      Merai is a futuristic technology company focused on developing cutting-edge software, artificial intelligence, and robotic systems.
+      We aim to merge prophetic innovation with practical application, leading the world into a new era of intelligent technology.
+    </p>
+  </section>
+
+  <!-- SOFTWARE -->
+  <section class="px-6 py-16 bg-gray-900" id="software">
+    <h2 class="text-3xl neon-text mb-4">Our Softwares</h2>
+    <div class="border-t border-cyan-700 pt-10">
+      <h3 class="text-2xl neon-text mb-6">Uploaded Files</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for item in metadata %}
+          <div class="border border-cyan-500 p-6 rounded-lg bg-black bg-opacity-40 shadow-md">
+            <h4 class="text-xl text-cyan-300 font-semibold mb-2">{{ item.name }}</h4>
+            <p class="text-sm mb-4 text-gray-300">{{ item.description }}</p>
+           {% if not item.paid %}
+  <!-- Free software download -->
+  <a href="{{ url_for('download_file', filename=item.filename) }}" class="glow-button w-full block text-center">Download</a>
+{% else %}
+  <!-- Paid software -->
+  {% if item.payment_verified %}
+    <a href="{{ url_for('download_file', filename=item.filename) }}" class="glow-button w-full block text-center">Download</a>
+  {% else %}
+    <button onclick="payWithPaystack('{{ item.name }}', '{{ item.filename }}')" class="bg-yellow-500 hover:bg-yellow-600 text-black px-3 py-1 rounded w-full">
+      Pay to Download
+    </button>
+  {% endif %}
+{% endif %}
+          </div>
+        {% else %}
+          <p class="text-gray-400 col-span-full">No software uploaded yet. Upload some via the admin panel.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- DONATION SECTION -->
+  <section id="donate" class="px-6 py-20 bg-gray-950 text-white relative">
+    <div class="max-w-2xl mx-auto bg-black bg-opacity-40 border border-cyan-500 rounded-lg shadow-xl p-10 text-center">
+      <h2 class="text-3xl neon-text mb-4">Support the Merai Project</h2>
+      <p class="mb-6 text-gray-300 text-lg">If our mission inspires you, consider making a donation to help us build a future of intelligent technologies.</p>
+
+      <div class="bg-black bg-opacity-60 p-6 rounded-lg border border-cyan-400 shadow-lg inline-block">
+        <p class="text-lg font-semibold text-cyan-300 mb-2">OPAY ACC:</p>
+        <p class="text-xl font-bold text-green-400">💸 7086505809</p>
+      </div>
+
+      <p class="mt-6 text-sm text-gray-400">Every donation brings us closer to awakening the future.</p>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="px-6 py-16 bg-black">
+    <h2 class="text-3xl neon-text mb-4">Contact Us</h2>
+    <p class="text-gray-300">Email: israelrecover7000@gmail.com</p>
+  </section>
+
+  <!-- PAYSTACK SDK -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script>
+    function payWithPaystack(name, filename) {
+      let handler = PaystackPop.setup({
+        key: 'pk_test_43a564185b674fd8f630355c6661ef670ece761',
+        email: 'israelrecover7000@gmail.com',
+        amount: 1000 * 100,
+        currency: "NGN",
+        ref: '' + Math.floor(Math.random() * 1000000000 + 1),
+        metadata: {
+          custom_fields: [
+            {
+              display_name: name,
+              filename: filename
+            }
+          ]
+        },
+        callback: function(response) {
+          fetch('/payment_verified', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ref: response.reference,
+              filename: filename
+            })
+          }).then(res => {
+            alert("Payment successful! Awaiting admin confirmation...");
+            window.location.reload();
+          });
+        },
+        onClose: function() {
+          alert('Transaction cancelled.');
+        }
+      });
+      handler.openIframe();
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merai Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0a0a0a;
+      color: #fff;
+    }
+    .neon-text {
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #ff6f00;
+    }
+    .glow-button {
+      background-color: transparent;
+      border: 2px solid #00ffff;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      color: #00ffff;
+      transition: all 0.3s ease-in-out;
+      animation: pulse 2s infinite;
+    }
+    .glow-button:hover {
+      background-color: #00ffff;
+      color: #000;
+      box-shadow: 0 0 15px #00ffff;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 5px #00ffff; }
+      50% { box-shadow: 0 0 15px #00ffff; }
+      100% { box-shadow: 0 0 5px #00ffff; }
+    }
+  </style>
+</head>
+
+<body class="p-6">
+  <h1 class="text-4xl neon-text mb-6">Merai Admin Panel</h1>
+
+  <h2 class="text-2xl neon-text mb-4">Pending Payment Requests</h2>
+  {% if requests %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% for req in requests %}
+        <div class="p-4 border border-cyan-500 rounded bg-gray-800">
+          <p class="mb-2 text-white"><strong>Filename:</strong> {{ req }}</p>
+          <form action="/approve_payment/{{ req }}" method="post">
+            <button type="submit" class="glow-button">Approve Download</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-gray-400">No pending requests at the moment.</p>
+  {% endif %}
+
+  <hr class="my-8 border-cyan-500">
+
+  <h2 class="text-2xl neon-text mb-4">Upload New Software</h2>
+  <form action="/upload" method="post" enctype="multipart/form-data" class="space-y-4">
+    <input type="text" name="name" placeholder="Software Name" class="w-full p-2 rounded bg-gray-800 border border-cyan-500" required>
+    <textarea name="description" placeholder="Description" class="w-full p-2 rounded bg-gray-800 border border-cyan-500" required></textarea>
+    <input type="file" name="file" class="w-full p-2 bg-gray-800 border border-cyan-500 rounded" required>
+    <label class="flex items-center gap-2 text-sm">
+      <input type="checkbox" name="paid" class="accent-cyan-500"> Paid download?
+    </label>
+    <button type="submit" class="glow-button">Upload Software</button>
+  </form>
+
+  <hr class="my-8 border-cyan-500">
+
+  <h2 class="text-2xl neon-text mb-4">Current Software List</h2>
+  {% if metadata %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% for item in metadata %}
+        <div class="p-4 border border-cyan-500 rounded bg-gray-800">
+          <h3 class="text-xl text-white mb-1">{{ item.name }}</h3>
+          <p class="text-sm text-gray-300 mb-1">{{ item.description }}</p>
+          <p class="text-sm text-gray-400">File: {{ item.filename }} | Paid: {{ 'Yes' if item.paid else 'No' }}</p>
+          <form action="/delete_metadata/{{ item.filename }}" method="post" class="mt-2">
+            <button type="submit" class="glow-button">Delete</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-gray-400">No software uploaded yet.</p>
+  {% endif %}
+
+  <footer class="text-center text-sm py-6 mt-12 text-gray-500">
+    &copy; 2025 MERAI Technologies Admin Panel. All Rights Reserved.
+  </footer>
+</body>
+
+</html>
